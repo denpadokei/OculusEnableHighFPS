@@ -1,19 +1,11 @@
 ﻿using HarmonyLib;
 using IPA;
-using IPA.Config;
-using IPA.Config.Stores;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using UnityEngine;
-using UnityEngine.SceneManagement;
 using IPALogger = IPA.Logging.Logger;
 
 namespace OculusEnableHighFPS
 {
-    [Plugin(RuntimeOptions.SingleStartInit)]
+    [Plugin(RuntimeOptions.DynamicInit)]
     public class Plugin
     {
         internal static Plugin Instance { get; private set; }
@@ -31,7 +23,7 @@ namespace OculusEnableHighFPS
             Instance = this;
             Log = logger;
             Log.Info("OculusEnableHighFPS initialized.");
-            harmony = new Harmony(HARMONY_ID);
+            this.harmony = new Harmony(HARMONY_ID);
         }
 
         #region BSIPA Config
@@ -61,7 +53,7 @@ namespace OculusEnableHighFPS
         [OnDisable]
         public void OnDisable()
         {
-            this.harmony.UnpatchAll(HARMONY_ID);
+            this.harmony.UnpatchSelf();
         }
         [OnExit]
         public void OnApplicationQuit()
